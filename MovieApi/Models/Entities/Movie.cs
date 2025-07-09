@@ -5,13 +5,6 @@ namespace MovieApi.Models.Entities
 {
     public class Movie
     {
-        /*Id, Title, Year, Genre, Duration
-(Ni får gärna normalisera tabellen Movie genom att bryta ut genre till egen tabell redan nu
-eller annars kommer det som extra senare men se det som extra just nu)
-• Relationer: 
-o 1:1 med MovieDetails
-o 1:M med Review
-o N:M med Actor via MovieActor*/
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public int Year { get; set; }

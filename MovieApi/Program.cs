@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieApi.Data;
+using MovieApi.Extensions;
+using MovieApi.MiddleWare;
 
 namespace MovieApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDbContext<MovieApiContext>(options =>
@@ -16,20 +18,38 @@ namespace MovieApi
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+
+            builder.Services.AddSwaggerGen(opt =>
+            {
+               opt.EnableAnnotations();
+            });
+
+            //builder.Services.AddAutoMapper(cfg =>
+            //{
+            //    cfg.AddProfile<MapperProfile>();
+            //});
+        
+            //builder.Services.AddOpenApi();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                //app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI(opt =>
+                {
+                    opt.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                });
+                await app.InitAsync();
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            //app.UseDemoMiddleware();
 
             app.MapControllers();
 

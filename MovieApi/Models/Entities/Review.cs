@@ -9,6 +9,6 @@
         // Foreign key
         public int MovieId { get; set; }
         // Navigation property
-        public Movie Movie { get; set; } = null!;
+        public Movie Movies { get; set; } = null!;
     }
 }
