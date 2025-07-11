@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MovieApi.Data;
 using MovieApi.Extensions;
-using MovieApi.MiddleWare;
 
 namespace MovieApi
 {
@@ -21,14 +19,14 @@ namespace MovieApi
 
             builder.Services.AddSwaggerGen(opt =>
             {
-               opt.EnableAnnotations();
+                opt.EnableAnnotations();
             });
 
-            //builder.Services.AddAutoMapper(cfg =>
-            //{
-            //    cfg.AddProfile<MapperProfile>();
-            //});
-        
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<MapperProfile>();
+            });
+
             //builder.Services.AddOpenApi();
 
             var app = builder.Build();

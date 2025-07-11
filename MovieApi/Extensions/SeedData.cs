@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using MovieApi.Data;
 using MovieApi.Migrations;
 using Bogus.DataSets;
+using AutoMapper;
+
 
 
 namespace MovieApi.Extensions
@@ -22,34 +24,35 @@ namespace MovieApi.Extensions
             //var actors = GenerateActors(50); //Skapa actors
             //await context.AddRangeAsync(actors);
 
-            var movies = GenerateMovies(10); //Skicka med actors
-            await context.AddRangeAsync(movies);
+            //var movies = GenerateMovies(10); //Skicka med actors
+            //await context.AddRangeAsync(movies);
 
 
 
             await context.SaveChangesAsync();
         }
-       
 
-        private static IEnumerable<Movie> GenerateMovies(int numberOfMovies)
+
+        private static IEnumerable<Movie> GenerateMovies(this IApplicationBuilder app)
         {
-            var movies = new List<Movie>(numberOfMovies);
-
-            for (int i = 0; i < numberOfMovies; i++)
             {
-                var movie = new Movie
+                var movies = new List<Movie>((IEnumerable<Movie>)app);
+
+                for (int i = 0; i < 10; i++)
                 {
-                    Title = faker.Lorem.Sentence(1),
-                    Year = faker.Date.Past(20).Year,
-                    Genre = faker.PickRandom(new[] { "Action", "Comedy", "Drama", "Horror", "Sci-Fi", "Romance" }),
-                    Duration = faker.Random.Int(60, 180),
-                    MovieDetails = new MovieDetail
+                    var movie = new Movie
                     {
-                        Budget = faker.Finance.Amount(1000000, 200000000, 2),
-                        Synopsis = faker.Lorem.Paragraph(),
-                        Language = faker.PickRandom(new[] { "English", "Spanish", "French", "German", "Chinese" })
-                    },
-                    Reviews = new List<Review>() //GenerateReviews(faker.Random.Int(1, 10))
+                        Title = faker.Lorem.Sentence(1),
+                        Year = faker.Date.Past(20).Year,
+                        Genre = faker.PickRandom(new[] { "Action", "Comedy", "Drama", "Horror", "Sci-Fi", "Romance" }),
+                        Duration = faker.Random.Int(60, 180),
+                        MovieDetails = new MovieDetail
+                        {
+                            Budget = faker.Finance.Amount(1000000, 200000000, 2),
+                            Synopsis = faker.Lorem.Paragraph(),
+                            Language = faker.PickRandom(new[] { "English", "Spanish", "French", "German", "Chinese" })
+                        },
+                        Reviews = new List<Review>() //GenerateReviews(faker.Random.Int(1, 10))
                     {
                         new Review
                         {
@@ -66,23 +69,25 @@ namespace MovieApi.Extensions
 
                         }
                     },
-                    Actors = new List<Actor>() //Skicka in en list slumpa fram ett visst antal
-                   {
-                       new Actor
+
+                        Actors = new List<Actor>()
+                    {
+                        new Actor
                        {
 
                           Name = faker.Name.FullName(),
                           BirthYear = faker.Date.Past(50).Year
                        }
                    }
-                };
-                
-                movies.Add(movie);
+                    };
+
+                    movies.Add(movie);
+                }
+
+                return movies;
             }
+        }
 
-            return movies;
-        }   
+
     }
-
-
 }
