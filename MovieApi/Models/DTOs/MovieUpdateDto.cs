@@ -22,6 +22,6 @@ namespace MovieApi.Models.DTOs
         [Required]
         [Range(1, 180)]
         public int Duration { get; set; }
-
+        public List<int> ActorIds { get; set; } = new List<int>();
     }
 }
